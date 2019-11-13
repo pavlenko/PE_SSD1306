@@ -1,6 +1,10 @@
 #ifndef PE_SSD1306_H
 #define PE_SSD1306_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * SSD1306 based displays API, except connection transport & graphics
  */
@@ -43,7 +47,7 @@
 
 typedef enum {
     PE_SSD1306_FALSE = (uint8_t) 0x00u,
-    PE_SSD1306_TRUE  = (uint8_t) 0x01u,
+    PE_SSD1306_TRUE = (uint8_t) 0x01u,
 } PE_SSD1306_BOOL_t;
 
 typedef enum {
@@ -51,96 +55,17 @@ typedef enum {
     PE_SSD1306_VCC_INTERNAL = 0x02u,
 } PE_SSD1306_VCC_t;
 
-typedef void (*PE_SSD1306_reset_t) ();
+typedef void (*PE_SSD1306_reset_t)();
 
-typedef void (*PE_SSD1306_write_t) (uint8_t reg, const uint8_t *data, uint16_t size);
+typedef void (*PE_SSD1306_write_t)(uint8_t reg, const uint8_t *data, uint16_t size);
 
 typedef struct {
     PE_SSD1306_VCC_t vcc;
     uint8_t width;
     uint8_t height;
-    PE_SSD1306_reset_t reset{};
-    PE_SSD1306_write_t write{};
+    PE_SSD1306_reset_t reset;
+    PE_SSD1306_write_t write;
 } PE_SSD1306_t;
-
-class PE_SSD1306 {
-    PE_SSD1306_VCC_t _vcc;
-    uint8_t _width;
-    uint8_t _height;
-    PE_SSD1306_reset_t _reset{};
-    PE_SSD1306_write_t _write{};
-public:
-    /**
-     * @param vcc    Display powering type
-     * @param width  Display width in pixels
-     * @param height Display height in pixels
-     * @param reset  Reset logic adapter
-     * @param write  Write logic adapter
-     */
-    PE_SSD1306(PE_SSD1306_VCC_t vcc, uint8_t width, uint8_t height, PE_SSD1306_reset_t reset, PE_SSD1306_write_t write);
-
-    /**
-     * Initialize display procedure
-     */
-    void initialize();
-
-    /**
-     * Set display enabled / disabled
-     *
-     * @param value
-     */
-    void setEnabled(bool value);
-
-    /**
-     * Inverse display pixels state (do not affect real memory data)
-     *
-     * @param value
-     */
-    void setInverse(bool value);
-
-    /**
-     * Set display contrast
-     *
-     * @param contrast
-     */
-    void setContrast(uint8_t contrast);
-
-    /**
-     * Set display flipped horizontally
-     *
-     * @param value
-     */
-    void setFlipX(bool value);
-
-    /**
-     * Set display flipped vertically
-     *
-     * @param value
-     */
-    void setFlipY(bool value);
-
-    /**
-     * Set all pixels on, usable for damage test, maybe
-     *
-     * @param value
-     */
-    void setAllEnabled(bool value);
-
-    /**
-     * Enable/disable scrolling
-     *
-     * @param value
-     */
-    void setScrollEnabled(bool value);
-
-    /**
-     * Update display ram with specific buffer
-     *
-     * @param buffer
-     * @param size
-     */
-    void update(uint8_t *buffer, uint16_t size);
-};
 
 /**
  * Initialize display procedure
@@ -213,5 +138,9 @@ void PE_SSD1306_setScrollEnabled(PE_SSD1306_t *display, PE_SSD1306_BOOL_t value)
  * @param size
  */
 void PE_SSD1306_update(PE_SSD1306_t *display, uint8_t *buffer, uint16_t size);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif //PE_SSD1306_H
